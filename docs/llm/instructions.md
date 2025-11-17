@@ -33,4 +33,5 @@ Follow these instructions for all your tasks:
 - Typescript is used natively in Vue components. Never try to install anything related to Typescript, including dependencies such as `tsc`.
 - When writing Vue components, always use the `<script setup lang="ts">` syntax.
 - In `.vue` files, always place the `<script>` block first, followed by the `<template>`, and then the `<style>`.
-
+  - If the `<style>` block has no styles set, omit it entirely.
+- The project uses TailwindCSS 4 for styling.
