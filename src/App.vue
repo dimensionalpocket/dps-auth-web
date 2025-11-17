@@ -5,10 +5,10 @@ useColorMode({ initialValue: 'dark' })
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
+  <div class="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
     <!-- Navbar: full-bleed background, constrained inner content -->
-    <header class="w-full bg-slate-100 dark:bg-slate-800">
-      <div class="mx-auto max-w-4xl px-4 py-3 flex items-center justify-between">
+    <header class="w-full bg-slate-100 dark:bg-slate-900 border-b-2 border-b-slate-500">
+      <div class="mx-auto max-w-4xl px-4 py-2 flex items-center justify-between">
         <div class="text-sm">Return to Site</div>
         <div class="font-semibold">Account center</div>
         <div class="text-sm">Login info</div>
@@ -23,10 +23,17 @@ useColorMode({ initialValue: 'dark' })
     </main>
 
     <!-- Footer: full-bleed background, constrained inner content -->
-    <footer class="w-full bg-slate-100 dark:bg-slate-800">
-      <div class="mx-auto max-w-4xl px-4 py-3 text-center">
+    <footer class="w-full bg-slate-100 dark:bg-slate-900 border-t-2 border-t-slate-500 text-sm font-extralight">
+      <div class="mx-auto max-w-4xl px-4 pt-2 pb-3 text-center">
         Footer
       </div>
     </footer>
   </div>
 </template>
+
+<style>
+html, body {
+  font-feature-settings: "cv02","cv03","cv04","cv11","tnum";
+  font-family: "InterVariable", "Inter", "system-ui";
+}
+</style>
