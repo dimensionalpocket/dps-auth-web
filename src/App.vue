@@ -26,7 +26,7 @@ useTitle('Account center') // TODO: use env variable in a future update
     <!-- Main: expands to fill space between header and footer, centers content -->
     <main class="flex-1 flex items-center justify-center px-4">
       <div class="mx-auto max-w-4xl w-full text-center">
-        Main content
+        <router-view/>
       </div>
     </main>
 
