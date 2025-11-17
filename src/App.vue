@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { useColorMode } from '@vueuse/core'
+import { useColorMode, useTitle } from '@vueuse/core'
 
 useColorMode({ initialValue: 'dark' })
+useTitle('Account center') // TODO: use env variable in a future update
+
 </script>
 
 <template>
