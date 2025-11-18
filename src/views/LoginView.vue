@@ -31,6 +31,7 @@ import Input from '@/components/ui/input/Input.vue';
               </FieldLabel>
               <Input
                 id="username"
+                name="username"
                 type="text"
                 placeholder="username"
                 required
@@ -49,7 +50,7 @@ import Input from '@/components/ui/input/Input.vue';
                   Forgot your password?
                 </a> -->
               </div>
-              <Input id="password" type="password" required autocomplete="current-password"/>
+              <Input id="password" name="password" type="password" required autocomplete="current-password"/>
             </Field>
             <Field>
               <Button type="submit">
