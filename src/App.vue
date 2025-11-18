@@ -24,8 +24,8 @@ useTitle('Account center') // TODO: use env variable in a future update
     </header>
 
     <!-- Main: expands to fill space between header and footer, centers content -->
-    <main class="flex-1 flex items-center justify-center px-4">
-      <div class="mx-auto max-w-4xl w-full text-center">
+    <main class="flex-1 flex items-stretch justify-center px-4">
+      <div class="flex mx-auto max-w-4xl w-full items-center justify-center">
         <router-view/>
       </div>
     </main>
@@ -43,5 +43,11 @@ useTitle('Account center') // TODO: use env variable in a future update
 html, body {
   font-feature-settings: "cv02","cv03","cv04","cv11","tnum";
   font-family: "InterVariable", "Inter", "system-ui";
+}
+
+/* This resets 1Password's unreadable colors in dark mode when fields are auto-filled. */
+input[data-com-onepassword-filled="light"] {
+  background-color: initial !important;
+  color: initial !important;
 }
 </style>
