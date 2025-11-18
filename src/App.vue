@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import LoginDropdown from '@/components/LoginDropdown.vue';
+import Button from '@/components/ui/button/Button.vue';
 import { useColorMode, useTitle } from '@vueuse/core'
-import LoginDropdown from './components/LoginDropdown.vue';
-import Button from './components/ui/button/Button.vue';
 import { ChevronLeft } from 'lucide-vue-next';
 
 useColorMode({ initialValue: 'dark' })
