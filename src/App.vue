@@ -14,9 +14,12 @@ useTitle('Account center') // TODO: use env variable in a future update
     <!-- Navbar: full-bleed background, constrained inner content -->
     <header class="w-full bg-slate-100 dark:bg-slate-900 border-b-2 border-b-slate-500">
       <div class="mx-auto max-w-4xl px-4 py-2 flex items-center justify-between">
-        <Button variant="outline" size="sm">
-          <ChevronLeft />
-          <span class="hidden sm:inline">Return to Site</span>
+        <Button variant="outline" size="lg" class="has-[>svg]:px-1 has-[>svg]:py-6">
+          <ChevronLeft class="size-8"/>
+          <div class="hidden sm:inline text-left leading-none pl-0 pr-2 pt-0">
+            <span class="text-xs font-light text-muted-foreground">Return to</span><br/>
+            <span>Site</span>
+          </div>
         </Button>
         <div class="font-semibold">Account Center</div>
         <LoginDropdown/>
