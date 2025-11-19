@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
@@ -9,8 +11,23 @@ import Field from '@/components/ui/field/Field.vue';
 import FieldDescription from '@/components/ui/field/FieldDescription.vue';
 import FieldGroup from '@/components/ui/field/FieldGroup.vue';
 import FieldLabel from '@/components/ui/field/FieldLabel.vue';
+import FieldError from '@/components/ui/field/FieldError.vue';
 import Input from '@/components/ui/input/Input.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import { useSessionStore } from '@/stores/session';
 
+const sessionStore = useSessionStore();
+const router = useRouter();
+
+const username = ref('');
+const password = ref('');
+
+async function onSubmit () {
+  const ok = await sessionStore.sessionAuthenticate(username.value, password.value);
+  if (ok) {
+    router.push({ name: 'sign-in-success' });
+  }
+}
 </script>
 
 <template>
@@ -23,7 +40,7 @@ import Input from '@/components/ui/input/Input.vue';
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form @submit.prevent="onSubmit">
           <FieldGroup>
             <Field>
               <FieldLabel for="username">
@@ -36,6 +53,8 @@ import Input from '@/components/ui/input/Input.vue';
                 placeholder="username"
                 required
                 autocomplete="username"
+                v-model="username"
+                :disabled="sessionStore.sessionLoading"
               />
             </Field>
             <Field>
@@ -50,11 +69,25 @@ import Input from '@/components/ui/input/Input.vue';
                   Forgot your password?
                 </a> -->
               </div>
-              <Input id="password" name="password" type="password" required autocomplete="current-password"/>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autocomplete="current-password"
+                v-model="password"
+                :disabled="sessionStore.sessionLoading"
+              />
             </Field>
             <Field>
-              <Button type="submit">
-                Login
+              <Button :disabled="sessionStore.sessionLoading" type="submit">
+                <template v-if="sessionStore.sessionLoading">
+                  <Spinner class="h-4 w-4 mr-2 inline-block" />
+                  Logging in…
+                </template>
+                <template v-else>
+                  Login
+                </template>
               </Button>
               <!-- <Button variant="outline" type="button">
                 Login with Google
@@ -65,6 +98,9 @@ import Input from '@/components/ui/input/Input.vue';
                   Sign up
                 </a>
               </FieldDescription>
+              <FieldError v-if="sessionStore.sessionLastError" class="mt-2 text-center">
+                {{ sessionStore.sessionLastError }}
+              </FieldError>
             </Field>
           </FieldGroup>
         </form>

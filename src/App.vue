@@ -36,7 +36,7 @@ useTitle('Account center') // TODO: use env variable in a future update
     <!-- Footer: full-bleed background, constrained inner content -->
     <footer class="w-full bg-slate-100 dark:bg-slate-900 border-t-2 border-t-slate-500 text-sm font-extralight">
       <div class="mx-auto max-w-4xl px-4 pt-2 pb-3 text-center">
-        Terms of Service <b class="font-extrabold mx-3">·</b> Privacy Policy
+        <!-- Terms of Service <b class="font-extrabold mx-3">·</b> Privacy Policy -->
       </div>
     </footer>
   </div>
