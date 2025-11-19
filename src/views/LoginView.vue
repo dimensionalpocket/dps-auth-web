@@ -25,7 +25,11 @@ const password = ref('');
 async function onSubmit () {
   const ok = await sessionStore.sessionAuthenticate(username.value, password.value);
   if (ok) {
-    router.push({ name: 'sign-in-success' });
+    // Replace (not push) to trigger password manager save prompt
+    router.replace({ name: 'sign-in-success' });
+  } else {
+    // Empties the password field to prevent password managers from asking to save incorrect passwords
+    password.value = '';
   }
 }
 </script>
@@ -40,7 +44,7 @@ async function onSubmit () {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent>
           <FieldGroup>
             <Field>
               <FieldLabel for="username">
@@ -55,6 +59,7 @@ async function onSubmit () {
                 autocomplete="username"
                 v-model="username"
                 :disabled="sessionStore.sessionLoading"
+                @keydown.enter.prevent="onSubmit"
               />
             </Field>
             <Field>
@@ -77,10 +82,11 @@ async function onSubmit () {
                 autocomplete="current-password"
                 v-model="password"
                 :disabled="sessionStore.sessionLoading"
+                @keydown.enter.prevent="onSubmit"
               />
             </Field>
             <Field>
-              <Button :disabled="sessionStore.sessionLoading" type="submit">
+              <Button :disabled="sessionStore.sessionLoading" type="button" @click="onSubmit">
                 <template v-if="sessionStore.sessionLoading">
                   <Spinner class="h-4 w-4 mr-2 inline-block" />
                   Logging in…
