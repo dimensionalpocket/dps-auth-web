@@ -99,10 +99,7 @@ async function onSubmit () {
                 Login with Google
               </Button> -->
               <FieldDescription class="text-center">
-                Don't have an account?
-                <a href="#">
-                  Sign up
-                </a>
+                Don't have an account? <router-link :to="{ name: 'register' }" class="text-primary">Sign up</router-link>
               </FieldDescription>
               <FieldError v-if="authStore.authLoginLastError" class="mt-2 text-center">
                 {{ authStore.authLoginLastError }}

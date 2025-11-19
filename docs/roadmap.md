@@ -8,7 +8,7 @@ This document outlines the planned features and improvements for the DpsAuthWeb 
 - [x] Install Pinia
 - [x] Create authStore w/ placeholder code (no real logic yet)
 - [x] Integrate auth store into LoginView
-- [ ] Integrate auth store into RegisterView
+- [x] Integrate auth store into RegisterView
 - [ ] Integrate auth store into LoginSuccessView
 - [ ] Document redirect logic and workflows
 - [ ] Complete HomeView code (will redirect according to session state)
