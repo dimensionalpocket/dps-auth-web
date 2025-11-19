@@ -14,19 +14,19 @@ import FieldLabel from '@/components/ui/field/FieldLabel.vue';
 import FieldError from '@/components/ui/field/FieldError.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
-import { useSessionStore } from '@/stores/session';
+import { useAuthStore } from '@/stores/auth';
 
-const sessionStore = useSessionStore();
+const authStore = useAuthStore();
 const router = useRouter();
 
 const username = ref('');
 const password = ref('');
 
 async function onSubmit () {
-  const ok = await sessionStore.sessionAuthenticate(username.value, password.value);
+  const ok = await authStore.authLogin(username.value, password.value);
   if (ok) {
     // Replace (not push) to trigger password manager save prompt
-    router.replace({ name: 'sign-in-success' });
+    router.replace({ name: 'login-success' });
   } else {
     // Empties the password field to prevent password managers from asking to save incorrect passwords
     password.value = '';
@@ -58,7 +58,7 @@ async function onSubmit () {
                 required
                 autocomplete="username"
                 v-model="username"
-                :disabled="sessionStore.sessionLoading"
+                :disabled="authStore.authLoading"
                 @keydown.enter.prevent="onSubmit"
               />
             </Field>
@@ -81,13 +81,13 @@ async function onSubmit () {
                 required
                 autocomplete="current-password"
                 v-model="password"
-                :disabled="sessionStore.sessionLoading"
+                :disabled="authStore.authLoading"
                 @keydown.enter.prevent="onSubmit"
               />
             </Field>
             <Field>
-              <Button :disabled="sessionStore.sessionLoading" type="button" @click="onSubmit">
-                <template v-if="sessionStore.sessionLoading">
+              <Button :disabled="authStore.authLoading" type="button" @click="onSubmit">
+                <template v-if="authStore.authLoading">
                   <Spinner class="h-4 w-4 mr-2 inline-block" />
                   Logging in…
                 </template>
@@ -104,8 +104,8 @@ async function onSubmit () {
                   Sign up
                 </a>
               </FieldDescription>
-              <FieldError v-if="sessionStore.sessionLastError" class="mt-2 text-center">
-                {{ sessionStore.sessionLastError }}
+              <FieldError v-if="authStore.authLoginLastError" class="mt-2 text-center">
+                {{ authStore.authLoginLastError }}
               </FieldError>
             </Field>
           </FieldGroup>

@@ -16,9 +16,9 @@ import DropdownMenuSeparator from './ui/dropdown-menu/DropdownMenuSeparator.vue'
     <div v-if="true" class="text-right leading-none">
       <span class="text-xs text-muted-foreground">Not logged in</span><br/>
       <span class="text-muted-foreground">
-        <router-link to="/sign-in" class="hover:underline text-primary">Login</router-link>
+        <router-link :to="{ name: 'login' }" class="hover:underline text-primary">Login</router-link>
         or
-        <router-link to="/sign-up" class="hover:underline text-primary">Sign up</router-link>
+        <router-link :to="{ name: 'register' }" class="hover:underline text-primary">Sign up</router-link>
       </span>
     </div>
     <ButtonGroup v-else>
