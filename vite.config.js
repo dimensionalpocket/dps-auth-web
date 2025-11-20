@@ -14,4 +14,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    port: 5000,
+    strictPort: true, // prevents Vite from switching to next free port
+  },
 })
