@@ -24,7 +24,7 @@ const password = ref('');
 const passwordConfirm = ref('');
 
 async function onSubmit () {
-  const ok = await authStore.authRegister(username.value, password.value, passwordConfirm.value);
+  const ok = await authStore.register(username.value, password.value, passwordConfirm.value);
   if (ok) {
     // Redirect to home on successful registration
     router.replace({ name: 'home' });
@@ -60,7 +60,7 @@ async function onSubmit () {
                 required
                 autocomplete="username"
                 v-model="username"
-                :disabled="authStore.authLoading"
+                 :disabled="authStore.loading"
                 @keydown.enter.prevent="onSubmit"
               />
               <!-- <FieldDescription>
@@ -80,7 +80,7 @@ async function onSubmit () {
                     required
                     autocomplete="new-password"
                     v-model="password"
-                    :disabled="authStore.authLoading"
+                    :disabled="authStore.loading"
                     @keydown.enter.prevent="onSubmit"
                   />
                 </Field>
@@ -95,7 +95,7 @@ async function onSubmit () {
                     required
                     autocomplete="new-password"
                     v-model="passwordConfirm"
-                    :disabled="authStore.authLoading"
+                    :disabled="authStore.loading"
                     @keydown.enter.prevent="onSubmit"
                   />
                 </Field>
@@ -105,8 +105,8 @@ async function onSubmit () {
               </FieldDescription> -->
             </Field>
             <Field>
-              <Button :disabled="authStore.authLoading" type="button" @click="onSubmit">
-                <template v-if="authStore.authLoading">
+              <Button :disabled="authStore.loading" type="button" @click="onSubmit">
+                <template v-if="authStore.loading">
                   <Spinner class="h-4 w-4 mr-2 inline-block" />
                   Creating account…
                 </template>
@@ -117,8 +117,8 @@ async function onSubmit () {
               <FieldDescription class="text-center">
                 Already have an account? <router-link :to="{ name: 'login' }" class="text-primary">Sign in</router-link>
               </FieldDescription>
-              <FieldError v-if="authStore.authRegisterLastError" class="mt-2 text-center">
-                {{ authStore.authRegisterLastError }}
+               <FieldError v-if="authStore.registerLastError" class="mt-2 text-center">
+                 {{ authStore.registerLastError }}
               </FieldError>
             </Field>
           </FieldGroup>

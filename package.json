@@ -11,6 +11,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/vue-table": "^8.21.3",
+    "@urql/exchange-retry": "^2.0.0",
+    "@urql/vue": "^2.0.0",
     "@vueuse/core": "^14.0.0",
     "@vueuse/head": "^2.0.0",
     "class-variance-authority": "^0.7.1",

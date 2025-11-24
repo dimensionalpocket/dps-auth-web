@@ -23,12 +23,12 @@ const username = ref('');
 const password = ref('');
 
 async function onSubmit () {
-  const ok = await authStore.authLogin(username.value, password.value);
+  const ok = await authStore.login(username.value, password.value);
   if (ok) {
     // Replace (not push) to trigger password manager save prompt
     router.replace({ name: 'login-success' });
   } else {
-    // Empties the password field to prevent password managers from asking to save incorrect passwords
+    // Empties password field to prevent password managers from asking to save incorrect passwords
     password.value = '';
   }
 }
@@ -58,7 +58,7 @@ async function onSubmit () {
                 required
                 autocomplete="username"
                 v-model="username"
-                :disabled="authStore.authLoading"
+                 :disabled="authStore.loading"
                 @keydown.enter.prevent="onSubmit"
               />
             </Field>
@@ -81,13 +81,13 @@ async function onSubmit () {
                 required
                 autocomplete="current-password"
                 v-model="password"
-                :disabled="authStore.authLoading"
+                 :disabled="authStore.loading"
                 @keydown.enter.prevent="onSubmit"
               />
             </Field>
             <Field>
-              <Button :disabled="authStore.authLoading" type="button" @click="onSubmit">
-                <template v-if="authStore.authLoading">
+               <Button :disabled="authStore.loading" type="button" @click="onSubmit">
+                <template v-if="authStore.loading">
                   <Spinner class="h-4 w-4 mr-2 inline-block" />
                   Logging in…
                 </template>
@@ -101,8 +101,8 @@ async function onSubmit () {
               <FieldDescription class="text-center">
                 Don't have an account? <router-link :to="{ name: 'register' }" class="text-primary">Sign up</router-link>
               </FieldDescription>
-              <FieldError v-if="authStore.authLoginLastError" class="mt-2 text-center">
-                {{ authStore.authLoginLastError }}
+               <FieldError v-if="authStore.loginLastError" class="mt-2 text-center">
+                 {{ authStore.loginLastError }}
               </FieldError>
             </Field>
           </FieldGroup>

@@ -1,0 +1,1 @@
+[GraphQL] Field "authLogin" argument "input" of type "Mutation" is required but not provided [GraphQL] Unknown argument "username" on field "authLogin" of type "Mutation". [GraphQL] Unknown argument "password" on field "authLogin" of type "Mutation". [GraphQL] Unknown field "user_id" on type "AuthLoginResponse". Did you mean "userId"?
