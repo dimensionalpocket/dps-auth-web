@@ -13,6 +13,6 @@ This document outlines the planned features and improvements for the DpsAuthWeb 
 - [ ] Document redirect logic and workflows
 - [ ] Complete HomeView code (will redirect according to session state)
 - [ ] Implement Login Success View (needs "redirect back to site" logic)
-- [ ] Integrate with real GraphQL backend
+- [x] Integrate with real GraphQL backend
 - [ ] Document "documents" workflow (e.g., Terms of Service, Privacy Policy)
 - [ ] Replace all links with route objects

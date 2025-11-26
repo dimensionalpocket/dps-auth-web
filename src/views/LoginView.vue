@@ -25,8 +25,8 @@ const password = ref('');
 async function onSubmit () {
   const ok = await authStore.login(username.value, password.value);
   if (ok) {
-    // Replace (not push) to trigger password manager save prompt
-    router.replace({ name: 'login-success' });
+    const redirectPath = router.currentRoute.value.query.redirect as string || 'login-success'
+    router.replace(redirectPath.startsWith('/') ? redirectPath : { name: redirectPath })
   } else {
     // Empties password field to prevent password managers from asking to save incorrect passwords
     password.value = '';

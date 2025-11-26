@@ -6,6 +6,8 @@ The schema is defined in the README of the backend repository:
 
 https://raw.githubusercontent.com/dimensionalpocket/dps-auth-api/library-conversion/README.md
 
+If you get a 404, it may mean that the `library-conversion` branch has been deleted. If that happens, switch to the `main` branch in the URL.
+
 When you are asked to update the schema, fetch the latest schema from the URL above and update the **Current Schema** section of this file accordingly.
 
 ## Current Schema

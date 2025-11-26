@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { _authLogin, _authRegister, _authLogout, _authMe, _authChangePassword } from '@/lib/auth-wrapper';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -7,6 +7,8 @@ export const useAuthStore = defineStore('auth', () => {
   const sessionData = ref<{ username: string; userId: number; token?: string; uuid?: string } | null>(null);
   const loginLastError = ref<string | null>(null);
   const registerLastError = ref<string | null>(null);
+
+  const isAuthenticated = computed(() => sessionData.value !== null);
 
   // Replace placeholder authLogin method
   async function login(username: string, password: string) {
@@ -102,6 +104,7 @@ export const useAuthStore = defineStore('auth', () => {
     sessionData,
     loginLastError,
     registerLastError,
+    isAuthenticated,
     login,
     register,
     logout,
