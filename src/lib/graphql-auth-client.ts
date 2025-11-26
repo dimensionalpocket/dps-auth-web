@@ -18,6 +18,7 @@ export const graphqlAuthClient = createClient({
     fetchExchange
   ],
   fetchOptions: {
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     }

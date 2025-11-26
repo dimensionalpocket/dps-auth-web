@@ -18,6 +18,7 @@ const client = createClient({
     fetchExchange
   ],
   fetchOptions: {
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     }
