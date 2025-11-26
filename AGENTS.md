@@ -66,4 +66,9 @@
 - Do not install any new packages unless they are specified in the plan
 
 ### Testing
-- Testing is not included at this time. No need to write tests. After implementation, just ensure the build command completes without errors. The user will manually test functionality.
+
+For unit tests of non-Vue code:
+- Use `bun:test` framework with `describe`, `it`, and `expect` functions
+- Do not use "should" in test descriptions (e.g., use `it('returns the correct path')` instead of `it('should return...')`)
+
+Testing of Vue components is not currently required.
