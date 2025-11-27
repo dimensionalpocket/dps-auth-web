@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import LoginSuccessView from '@/views/LoginSuccessView.vue'
+import PasswordChangeView from '@/views/PasswordChangeView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import { useAuthStore } from '@/stores/auth'
 
@@ -21,6 +22,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   { path: '/register', name: 'register', component: RegisterView },
+  { 
+    path: '/password-change', 
+    name: 'password-change', 
+    component: PasswordChangeView,
+    meta: { requiresAuth: true }
+  },
 ]
 
 export const router = createRouter({

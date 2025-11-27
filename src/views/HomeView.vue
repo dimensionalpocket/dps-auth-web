@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -7,10 +8,10 @@ import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 
 const authStore = useAuthStore();
+const router = useRouter();
 
-// Placeholder functions for buttons
 function handleChangePassword() {
-  // TODO: Implement change password functionality
+  router.push({ name: 'password-change' });
 }
 
 function handleLogout() {

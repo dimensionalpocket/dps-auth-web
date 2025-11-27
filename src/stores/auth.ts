@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', () => {
   const sessionData = ref<{ username: string; userId: number; token?: string; uuid?: string } | null>(null);
   const loginLastError = ref<string | null>(null);
   const registerLastError = ref<string | null>(null);
+  const changePasswordLastError = ref<string | null>(null);
 
   const isAuthenticated = computed(() => sessionData.value !== null);
 
@@ -100,16 +101,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Add changePassword method
   async function changePassword(currentPassword: string, newPassword: string, newPasswordConfirmation: string) {
-    loading.value = true;
+    changePasswordLastError.value = null;
     
     try {
       await _authChangePassword(currentPassword, newPassword, newPasswordConfirmation);
       return true;
     } catch (error: any) {
-      loginLastError.value = error.message || 'Password change failed';
+      changePasswordLastError.value = error.message || 'Password change failed';
       return false;
-    } finally {
-      loading.value = false;
     }
   }
 
@@ -120,6 +119,7 @@ export const useAuthStore = defineStore('auth', () => {
     sessionData,
     loginLastError,
     registerLastError,
+    changePasswordLastError,
     isAuthenticated,
     sessionInfoPromise,
     ensureSession,
