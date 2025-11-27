@@ -6,6 +6,7 @@ import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -14,8 +15,9 @@ function handleChangePassword() {
   router.push({ name: 'password-change' });
 }
 
-function handleLogout() {
-  // TODO: Implement logout functionality
+async function handleLogout() {
+  await authStore.logout();
+  router.push({ name: 'login' });
 }
 </script>
 
@@ -27,11 +29,21 @@ function handleLogout() {
       </CardHeader>
       <CardContent>
         <div class="flex flex-col sm:flex-row gap-2">
-          <Button @click="handleChangePassword" class="flex-1">
+          <Button 
+            @click="handleChangePassword" 
+            class="flex-1"
+            :disabled="authStore.loading"
+          >
             Change password
           </Button>
-          <Button variant="destructive" @click="handleLogout" class="flex-1">
-            Log out
+          <Button 
+            variant="destructive" 
+            @click="handleLogout" 
+            class="flex-1"
+            :disabled="authStore.loading"
+          >
+            <Spinner v-if="authStore.loading" class="w-4 h-4 mr-2" />
+            {{ authStore.loading ? 'Logging out...' : 'Log out' }}
           </Button>
         </div>
       </CardContent>

@@ -9,12 +9,12 @@ import { ChevronLeft, Settings } from 'lucide-vue-next';
 
 const router = useRouter();
 
-function goHome() {
-  router.push({ name: 'home' });
+function goBackToSite() {
+  router.push({ name: 'home' }); // placeholder
 }
 
 function goAccount() {
-  router.push({ name: 'account' });
+  router.push({ name: 'home' });
 }
 </script>
 
@@ -27,7 +27,7 @@ function goAccount() {
       <CardContent>
         <div class="text-center py-4">
           <div class="flex gap-6 justify-center">
-            <Button type="button" @click="goHome">
+            <Button type="button" @click="goBackToSite">
               <ChevronLeft/>
               Return to Site
             </Button>
