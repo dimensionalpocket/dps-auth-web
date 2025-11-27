@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { KeyRound, LogOut } from 'lucide-vue-next';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
@@ -34,6 +35,7 @@ async function handleLogout() {
             class="flex-1"
             :disabled="authStore.loading"
           >
+            <KeyRound class="w-4 h-4 mr-2" />
             Change password
           </Button>
           <Button 
@@ -43,6 +45,7 @@ async function handleLogout() {
             :disabled="authStore.loading"
           >
             <Spinner v-if="authStore.loading" class="w-4 h-4 mr-2" />
+            <LogOut v-else class="w-4 h-4 mr-2" />
             {{ authStore.loading ? 'Logging out...' : 'Log out' }}
           </Button>
         </div>

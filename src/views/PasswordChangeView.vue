@@ -110,6 +110,14 @@ async function onSubmit() {
                   Change Password
                 </template>
               </Button>
+              <div class="mt-2 text-center">
+                <router-link 
+                  :to="{ name: 'home' }" 
+                  class="text-sm text-muted-foreground hover:underline"
+                >
+                  Cancel
+                </router-link>
+              </div>
               <FieldError v-if="authStore.changePasswordLastError" class="mt-2 text-center">
                 {{ authStore.changePasswordLastError }}
               </FieldError>
