@@ -11,13 +11,15 @@ import DropdownMenuSeparator from './ui/dropdown-menu/DropdownMenuSeparator.vue'
 import Spinner from './ui/spinner/Spinner.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { logoutWithToast } from '@/lib/logout';
+import { useToast } from '@/composables/useToast';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const { success } = useToast();
 
 async function handleLogout() {
-  await authStore.logout();
-  router.push({ name: 'login' });
+  await logoutWithToast(router, { success });
 }
 
 function handleGoHome() {

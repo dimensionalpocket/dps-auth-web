@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import LoginDropdown from '@/components/LoginDropdown.vue';
 import Button from '@/components/ui/button/Button.vue';
+import { Toaster } from '@/components/ui/sonner'
 import { useColorMode, useTitle } from '@vueuse/core'
 import { ChevronLeft } from 'lucide-vue-next';
+import 'vue-sonner/style.css'
 
 useColorMode({ initialValue: 'dark' })
 useTitle('Account center') // TODO: use env variable in a future update
@@ -39,6 +41,13 @@ useTitle('Account center') // TODO: use env variable in a future update
         <!-- Terms of Service <b class="font-extrabold mx-3">·</b> Privacy Policy -->
       </div>
     </footer>
+    
+    <!-- Global Toast Container -->
+    <div class="fixed bottom-0 left-0 right-0 flex justify-center p-4 pointer-events-none">
+      <div class="w-full max-w-4xl pointer-events-auto">
+        <Toaster position="bottom-center" closeButton />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,5 +61,16 @@ html, body {
 input[data-com-onepassword-filled="light"] {
   background-color: initial !important;
   color: initial !important;
+}
+
+button[aria-label="Close toast"] {
+  border: 2px solid #222 !important;
+  /* Move to top-right */
+  position: absolute !important;
+  top: auto !important;
+  right: 8px !important;
+  left: auto !important;
+  bottom: auto !important;
+  transform: none !important;
 }
 </style>

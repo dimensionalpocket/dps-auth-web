@@ -14,9 +14,11 @@ import FieldError from '@/components/ui/field/FieldError.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useToast } from '@/composables/useToast';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const { success } = useToast();
 
 const loading = ref(false);
 const currentPassword = ref('');
@@ -31,6 +33,7 @@ async function onSubmit() {
     newPasswordConfirm.value
   );
   if (ok) {
+    success('Password changed successfully!');
     router.replace({ name: 'home' });
   } else {
     // Do not clear password fields on failure; store exposes error to display

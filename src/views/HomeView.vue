@@ -8,17 +8,19 @@ import CardContent from '@/components/ui/card/CardContent.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
+import { logoutWithToast } from '@/lib/logout';
+import { useToast } from '@/composables/useToast';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const { success } = useToast();
 
 function handleChangePassword() {
   router.push({ name: 'password-change' });
 }
 
 async function handleLogout() {
-  await authStore.logout();
-  router.push({ name: 'login' });
+  await logoutWithToast(router, { success });
 }
 </script>
 

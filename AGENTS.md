@@ -42,6 +42,7 @@
 - The router (Vue Router) is configured in `src/lib/router.ts`.
 - The lib folder (`src/lib/`) also contains utility functions and modules.
 - The project uses Shadcn-Vue for component generation. Generated components live in `src/components/ui/`.
+  - When installing new Shadcn-Vue components, use the `bunx --bun shadcn-vue@latest add <component>` command.
 - Other components live in `src/components/` (not in `ui/`).
 - The project has an `@` alias pointing to `src/` for easier imports. When importing from `src/`, use `@/` instead of relative paths.
 - Styles live in `src/style.css`. However that file is mostly for TailwindCSS imports and global styles.
