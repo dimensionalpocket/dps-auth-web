@@ -72,3 +72,13 @@ For unit tests of non-Vue code:
 - Do not use "should" in test descriptions (e.g., use `it('returns the correct path')` instead of `it('should return...')`)
 
 Testing of Vue components is not currently required.
+
+### Linting
+
+There currently no linter configured. Use these simple rules:
+- Use 2 spaces for indentation
+- Use single quotes for strings
+- No semicolons at the end of lines
+- Use trailing commas in multi-line objects and arrays
+- Files should end with a newline
+- Use a space before the brackets in function definitions

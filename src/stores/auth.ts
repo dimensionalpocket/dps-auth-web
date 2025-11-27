@@ -10,6 +10,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => sessionData.value !== null);
 
+  // Initialize session check immediately after me() is defined
+  const sessionInfoPromise = ref<Promise<void>>();
+  me() // immediately sets sessionInfoPromise
+
   // Replace placeholder authLogin method
   async function login(username: string, password: string) {
     loading.value = true;
@@ -59,6 +63,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await _authLogout();
       sessionData.value = null;
+      // Start new session check immediately
+      sessionInfoPromise.value = me()
     } catch (error: any) {
       console.error('Logout error:', error);
     } finally {
@@ -66,20 +72,30 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Add new me method
-  async function me() {
-    try {
-      const user = await _authMe();
-      sessionData.value = {
-        username: user.username,
-        userId: user.userId,
-        uuid: user.uuid
-      };
-      return user;
-    } catch (error: any) {
-      sessionData.value = null;
-      throw error;
-    }
+  async function me (): Promise<void> {
+    sessionInfoPromise.value = _authMe()
+      .then(user => {
+        if (user) {
+          sessionData.value = {
+            username: user.username,
+            userId: user.userId,
+            uuid: user.uuid
+          };
+        } else {
+          sessionData.value = null;
+        }
+      })
+      .catch(error => {
+        sessionData.value = null;
+        throw error;
+      });
+    
+    return sessionInfoPromise.value;
+  }
+
+  async function ensureSession(): Promise<void> {
+    // Promise is always available, never null
+    return sessionInfoPromise.value;
   }
 
   // Add changePassword method
@@ -105,6 +121,8 @@ export const useAuthStore = defineStore('auth', () => {
     loginLastError,
     registerLastError,
     isAuthenticated,
+    sessionInfoPromise,
+    ensureSession,
     login,
     register,
     logout,

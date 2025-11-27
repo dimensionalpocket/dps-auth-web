@@ -15,7 +15,7 @@ const client = createClient({
         return error.response && error.response.status === 502
       }
     }),
-    fetchExchange
+    fetchExchange,
   ],
   fetchOptions: {
     credentials: 'include',
@@ -192,7 +192,7 @@ export async function _getServerTimestamp(): Promise<string> {
   return result.data.getServerTimestamp
 }
 
-export async function _authMe(): Promise<AuthMeResponse> {
+export async function _authMe(): Promise<AuthMeResponse | null> {
   const result = await client.query(AUTH_ME, {}).toPromise()
   if (result.error) throw result.error
   return result.data.authMe
