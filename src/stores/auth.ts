@@ -4,7 +4,7 @@ import { _authLogin, _authRegister, _authLogout, _authMe, _authChangePassword } 
 
 export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
-  const sessionData = ref<{ username: string; userId: number; token?: string; uuid?: string } | null>(null);
+  const sessionData = ref<{ username: string; userId: number; uuid: string; roleId: number; roleName: string } | null>(null);
   const loginLastError = ref<string | null>(null);
   const registerLastError = ref<string | null>(null);
   const changePasswordLastError = ref<string | null>(null);
@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Initialize session check immediately after me() is defined
   const sessionInfoPromise = ref<Promise<void>>();
-  me() // immediately sets sessionInfoPromise
+  me() // immediately sets sessionInfoPromise (no await)
 
   // Replace placeholder authLogin method
   async function login(username: string, password: string) {
@@ -21,12 +21,9 @@ export const useAuthStore = defineStore('auth', () => {
     loginLastError.value = null;
     
     try {
-      const result = await _authLogin(username, password);
-      sessionData.value = { 
-        username: result.username,
-        userId: result.userId,
-        token: result.token
-      };
+      await _authLogin(username, password);
+      // Call me() to get complete user profile including role information
+      await me();
       return true;
     } catch (error: any) {
       loginLastError.value = error.message || 'Login failed';
@@ -43,11 +40,10 @@ export const useAuthStore = defineStore('auth', () => {
     
     try {
       const result = await _authRegister(username, password, passwordConfirm);
-      sessionData.value = { 
-        username: result.username,
-        userId: result.userId,
-        uuid: result.uuid
-      };
+      console.log('Registration result:', result);
+      // Call me() to get complete user profile
+      await me();
+      console.log('Session data after registration:', sessionData.value);
       return true;
     } catch (error: any) {
       registerLastError.value = error.message || 'Registration failed';
@@ -73,14 +69,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function me (): Promise<void> {
+  // Do not flag this function as async,
+  // as it does not use await, and returns a cacheable Promise
+  function me (): Promise<void> {
+    console.log('Fetching current user session data...');
     sessionInfoPromise.value = _authMe()
       .then(user => {
         if (user) {
+          console.log('AuthMe user data:', user);
           sessionData.value = {
             username: user.username,
             userId: user.userId,
-            uuid: user.uuid
+            uuid: user.uuid,
+            roleId: user.roleId,
+            roleName: user.roleName
           };
         } else {
           sessionData.value = null;

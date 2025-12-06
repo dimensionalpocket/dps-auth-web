@@ -39,10 +39,7 @@ const AUTH_ME = `
       uuid
       username
       roleId
-      createdTs
-      updatedTs
-      sessionIat
-      sessionExp
+      roleName
     }
   }
 `
@@ -66,8 +63,6 @@ const AUTH_REGISTER = `
       uuid
       username
       roleId
-      createdTs
-      updatedTs
       message
     }
   }
@@ -151,10 +146,7 @@ export interface AuthMeResponse {
   uuid: string
   username: string
   roleId: number
-  createdTs: number
-  updatedTs: number
-  sessionIat: number
-  sessionExp: number
+  roleName: string
 }
 
 export interface AuthRegisterResponse {
@@ -162,8 +154,6 @@ export interface AuthRegisterResponse {
   uuid: string
   username: string
   roleId: number
-  createdTs: number
-  updatedTs: number
   message: string
 }
 
@@ -193,7 +183,8 @@ export async function _getServerTimestamp(): Promise<string> {
 }
 
 export async function _authMe(): Promise<AuthMeResponse | null> {
-  const result = await client.query(AUTH_ME, {}).toPromise()
+  // Force network fetch to ensure fresh session data
+  const result = await client.query(AUTH_ME, {}, { requestPolicy: 'network-only' }).toPromise()
   if (result.error) throw result.error
   return result.data.authMe
 }
