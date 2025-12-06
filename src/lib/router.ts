@@ -6,6 +6,10 @@ import LoginSuccessView from '@/views/LoginSuccessView.vue'
 import PasswordChangeView from '@/views/PasswordChangeView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import { useAuthStore } from '@/stores/auth'
+import AdminApp from '@/views/admin/AdminApp.vue'
+import AdminHomeView from '@/views/admin/AdminHomeView.vue'
+import AdminSitesView from '@/views/admin/AdminSitesView.vue'
+import AdminUsersView from '@/views/admin/AdminUsersView.vue'
 
 const routes = [
   { 
@@ -27,6 +31,27 @@ const routes = [
     name: 'password-change', 
     component: PasswordChangeView,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin',
+    component: AdminApp,
+    children: [
+      {
+        path: '',
+        name: 'admin-home',
+        component: AdminHomeView,
+      },
+      {
+        path: '/users',
+        name: 'admin-users',
+        component: AdminUsersView,
+      },
+      {
+        path: '/sites',
+        name: 'admin-sites',
+        component: AdminSitesView,
+      },
+    ]
   },
 ]
 
