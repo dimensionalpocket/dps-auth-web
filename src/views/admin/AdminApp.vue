@@ -10,10 +10,12 @@ import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
 
 const route = useRoute()
 
+const ADMIN_ROUTE_NAMES = ['admin-home', 'admin-users', 'admin-sites']
+
 // Compute current tab based on route name
 const currentTab = computed(() => {
   const routeName = route.name as string
-  return ['admin-home', 'admin-users', 'admin-sites'].includes(routeName) ? routeName : 'admin-home'
+  return ADMIN_ROUTE_NAMES.includes(routeName) ? routeName : 'admin-home'
 })
 
 // Reactive tab value for the Tabs component
