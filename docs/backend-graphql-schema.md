@@ -17,7 +17,7 @@ When you are asked to update the schema, fetch the latest schema from the URL ab
 | Operation | Description |
 |-----------|-------------|
 | `getServerTimestamp` | Get current server timestamp. Returns timestamp (String). No authentication required. |
-| `authMe` | Get current authenticated user profile. Returns userId (Int), uuid (String), username (String), roleId (Int), createdTs (Int), updatedTs (Int), sessionIat (Int), sessionExp (Int). Requires valid session cookie. |
+| `authMe` | Get current authenticated user profile. Returns userId (Int), uuid (String), username (String), roleId (Int), roleName (String), createdTs (Int), updatedTs (Int), sessionIat (Int), sessionExp (Int). Requires valid session cookie. |
 | `site` | Get complete site details by ID (admin only). Returns id (Int!), slug (String), subdomain (String), port (Int), protocol (String), metadataJson (String), createdTs (Int), updatedTs (Int). Requires can_view_site_details permission. |
 | `sites` | List all sites in database. Returns array of [id (Int), slug (String), subdomain (String), port (Int), protocol (String)]. No authentication required. |
 | `user` | Get complete user details by ID (admin only). Returns id (Int!), uuid (String), username (String), roleId (Int), roleName (String), createdTs (Int), updatedTs (Int). Requires can_view_user_details permission. |
