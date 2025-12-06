@@ -20,6 +20,9 @@ export const useSiteStore = defineStore('site', () => {
     }
   }
 
+  // Load sites immediately
+  fetch()
+
   async function add(slug: string, subdomain?: string, port?: number, protocol?: string, metadataJson?: string) {
     loading.value = true;
     lastError.value = null;
