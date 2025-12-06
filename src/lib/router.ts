@@ -42,12 +42,12 @@ const routes = [
         component: AdminHomeView,
       },
       {
-        path: '/users',
+        path: 'users',
         name: 'admin-users',
         component: AdminUsersView,
       },
       {
-        path: '/sites',
+        path: 'sites',
         name: 'admin-sites',
         component: AdminSitesView,
       },

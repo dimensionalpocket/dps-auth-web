@@ -32,26 +32,41 @@
 
 - This is a Bun project. Never use `npm`, `node`, `typescript`, or `tsc` commands. Always use `bun` commands.
 - This is a Vue project using Typescript natively (via Bun). Typescript transpilation is not required.
+
 - Entry point is `src/main.ts`.
 - Main app component is `src/App.vue`.
 - Views live in `src/views/`.
 - Components live in `src/components/`.
+
 - Stores live in `src/stores/`.
   - The project uses Pinia for state management.
   - The Auth store stores user session state from the GraphQL backend.
+
 - The router (Vue Router) is configured in `src/lib/router.ts`.
+  - When adding child routes, do NOT add the leading slash (`/`) to the path.
+    - Example: use `path: 'settings'` instead of `path: '/settings'` for a child route.
+
 - The lib folder (`src/lib/`) also contains utility functions and modules.
+
 - The project uses Shadcn-Vue for component generation. Generated components live in `src/components/ui/`.
   - When installing new Shadcn-Vue components, use the `bunx --bun shadcn-vue@latest add <component>` command.
+  - After installing a Shadcn-Vue component, do not change the generated code. If changes are necessary, document them in the plan.
+
 - Other components live in `src/components/` (not in `ui/`).
+
 - The project has an `@` alias pointing to `src/` for easier imports. When importing from `src/`, use `@/` instead of relative paths.
+
 - Styles live in `src/style.css`. However that file is mostly for TailwindCSS imports and global styles.
   - For global styles, use App.vue's `<style>` block.
   - For component-specific styles, use the component's own `<style>` block. Do not use `scoped` styles.
+
 - In `.vue` files, always place the `<script>` block first, followed by the `<template>`, and then the `<style>`.
   - If the `<style>` block has no styles set, omit it entirely.
+
 - The project uses composition API with `<script setup lang="ts">` syntax in Vue components.
+
 - When designing interfaces, use TailwindCSS 4 for styling.
+
 - When working with links to routes use `router-link`. For links or buttons with the `to` argument, use route objects (with `name` property) instead of strings.
 
 ## Backend Interaction
