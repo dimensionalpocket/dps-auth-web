@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useSiteStore } from '@/stores/site'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+const router = useRouter()
 const siteStore = useSiteStore()
 const { sites, loading } = storeToRefs(siteStore)
 
@@ -25,8 +27,7 @@ const handleDeleteSite = (siteId: number) => {
 }
 
 const handleAddSite = () => {
-  // TODO: Implement add site functionality
-  console.log('Add site')
+  router.push({ name: 'admin-sites-new' })
 }
 </script>
 

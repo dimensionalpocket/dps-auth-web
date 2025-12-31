@@ -28,7 +28,7 @@ const client = createClient({
 // GraphQL query/mutation constants
 const GET_SERVER_TIMESTAMP = `
   query GetServerTimestamp {
-    getServerTimestamp
+    serverTimestamp
   }
 `
 
@@ -38,8 +38,11 @@ const AUTH_ME = `
       userId
       uuid
       username
-      roleId
-      roleName
+      role {
+        id
+        name
+        permissions
+      }
     }
   }
 `
@@ -59,10 +62,16 @@ const SITES = `
 const AUTH_REGISTER = `
   mutation AuthRegister($username: String!, $password: String!, $passwordConfirmation: String!) {
     authRegister(username: $username, password: $password, passwordConfirmation: $passwordConfirmation) {
-      userId
-      uuid
-      username
-      roleId
+      user {
+        userId
+        uuid
+        username
+        role {
+          id
+          name
+          permissions
+        }
+      }
       message
     }
   }
@@ -72,8 +81,15 @@ const AUTH_LOGIN = `
   mutation AuthLogin($username: String!, $password: String!) {
     authLogin(username: $username, password: $password) {
       token
-      userId
-      username
+      user {
+        userId
+        username
+        role {
+          id
+          name
+          permissions
+        }
+      }
       message
     }
   }
@@ -140,27 +156,112 @@ const REMOVE_SITE = `
   }
 `
 
+const ROLE_PERMISSIONS = `
+  query RolePermissions {
+    rolePermissions
+  }
+`
+
+const ROLES = `
+  query Roles {
+    roles {
+      id
+      name
+      permissions
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const ROLE = `
+  query Role($id: Int!) {
+    role(id: $id) {
+      id
+      name
+      permissions
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const ADD_ROLE = `
+  mutation AddRole($name: String!, $permissions: [String!]!) {
+    addRole(name: $name, permissions: $permissions) {
+      id
+      name
+      permissions
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const UPDATE_ROLE = `
+  mutation UpdateRole($id: Int!, $name: String, $permissions: [String]) {
+    updateRole(id: $id, name: $name, permissions: $permissions) {
+      id
+      name
+      permissions
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const SET_DEFAULT_ROLE = `
+  mutation SetDefaultRole($roleId: Int!) {
+    setDefaultRole(roleId: $roleId) {
+      id
+      name
+      isDefault
+      permissions
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const REMOVE_ROLE = `
+  mutation RemoveRole($id: Int!) {
+    removeRole(id: $id) {
+      success
+    }
+  }
+`
+
 // Type definitions based on schema
+export interface Role {
+  id: string
+  name: string
+  permissions: string[]
+}
+
 export interface AuthMeResponse {
   userId: number
   uuid: string
   username: string
-  roleId: number
-  roleName: string
+  role: Role
 }
 
 export interface AuthRegisterResponse {
-  userId: number
-  uuid: string
-  username: string
-  roleId: number
+  user: {
+    userId: number
+    uuid: string
+    username: string
+    role: Role
+  }
   message: string
 }
 
 export interface AuthLoginResponse {
   token: string
-  userId: number
-  username: string
+  user: {
+    userId: number
+    username: string
+    role: Role
+  }
   message: string
 }
 
@@ -175,11 +276,28 @@ export interface Site {
   updatedTs: number
 }
 
+export interface RoleWithTimestamps {
+  id: number
+  name: string
+  permissions: string[]
+  createdTs: number
+  updatedTs: number
+}
+
+export interface RoleWithDefault {
+  id: number
+  name: string
+  isDefault: boolean
+  permissions: string[]
+  createdTs: number
+  updatedTs: number
+}
+
 // Internal wrapper functions (underscore prefix to avoid naming conflicts with store methods)
 export async function _getServerTimestamp(): Promise<string> {
   const result = await client.query(GET_SERVER_TIMESTAMP, {}).toPromise()
   if (result.error) throw result.error
-  return result.data.getServerTimestamp
+  return result.data.serverTimestamp
 }
 
 export async function _authMe(): Promise<AuthMeResponse | null> {
@@ -190,7 +308,7 @@ export async function _authMe(): Promise<AuthMeResponse | null> {
 }
 
 export async function _sites(): Promise<Site[]> {
-  const result = await client.query(SITES, {}).toPromise()
+  const result = await client.query(SITES, {}, { requestPolicy: 'network-only' }).toPromise()
   if (result.error) throw result.error
   return result.data.sites
 }
@@ -235,4 +353,46 @@ export async function _removeSite(siteId: number): Promise<Site> {
   const result = await client.mutation(REMOVE_SITE, { siteId }).toPromise()
   if (result.error) throw result.error
   return result.data.removeSite
+}
+
+export async function _rolePermissions(): Promise<string[]> {
+  const result = await client.query(ROLE_PERMISSIONS, {}).toPromise()
+  if (result.error) throw result.error
+  return result.data.rolePermissions
+}
+
+export async function _roles(): Promise<RoleWithTimestamps[]> {
+  const result = await client.query(ROLES, {}).toPromise()
+  if (result.error) throw result.error
+  return result.data.roles
+}
+
+export async function _role(id: number): Promise<RoleWithTimestamps> {
+  const result = await client.query(ROLE, { id }).toPromise()
+  if (result.error) throw result.error
+  return result.data.role
+}
+
+export async function _addRole(name: string, permissions: string[]): Promise<RoleWithTimestamps> {
+  const result = await client.mutation(ADD_ROLE, { name, permissions }).toPromise()
+  if (result.error) throw result.error
+  return result.data.addRole
+}
+
+export async function _updateRole(id: number, name?: string, permissions?: string[]): Promise<RoleWithTimestamps> {
+  const result = await client.mutation(UPDATE_ROLE, { id, name, permissions }).toPromise()
+  if (result.error) throw result.error
+  return result.data.updateRole
+}
+
+export async function _setDefaultRole(roleId: number): Promise<RoleWithDefault> {
+  const result = await client.mutation(SET_DEFAULT_ROLE, { roleId }).toPromise()
+  if (result.error) throw result.error
+  return result.data.setDefaultRole
+}
+
+export async function _removeRole(id: number): Promise<{ success: boolean }> {
+  const result = await client.mutation(REMOVE_ROLE, { id }).toPromise()
+  if (result.error) throw result.error
+  return result.data.removeRole
 }

@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/auth'
 import AdminApp from '@/views/admin/AdminApp.vue'
 import AdminHomeView from '@/views/admin/AdminHomeView.vue'
 import AdminSitesView from '@/views/admin/AdminSitesView.vue'
+import AdminSitesNewView from '@/views/admin/AdminSitesNewView.vue'
 import AdminUsersView from '@/views/admin/AdminUsersView.vue'
 
 const routes = [
@@ -35,6 +36,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminApp,
+    meta: { requiresAuth: true, requiresAdmin: true },
     children: [
       {
         path: '',
@@ -51,6 +53,11 @@ const routes = [
         name: 'admin-sites',
         component: AdminSitesView,
       },
+      {
+        path: 'sites/new',
+        name: 'admin-sites-new',
+        component: AdminSitesNewView,
+      },
     ]
   },
 ]
@@ -62,17 +69,23 @@ export const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  
+
   if (to.meta.requiresAuth) {
     await authStore.ensureSession()
     if (!authStore.isAuthenticated) {
-      next({ 
-        name: 'login', 
-        query: { redirect: to.fullPath } 
+      next({
+        name: 'login',
+        query: { redirect: to.fullPath }
       })
-    } else {
-      next()
+      return
     }
+
+    if (to.meta.requiresAdmin && !authStore.canAccessAdmin) {
+      next({ name: 'home' })
+      return
+    }
+
+    next()
   } else {
     next()
   }

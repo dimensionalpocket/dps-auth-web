@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlertTriangleIcon, CheckIcon, ChevronDownIcon, CopyIcon, KeyRound, LogOut, ShareIcon, UserCog, UserRoundXIcon, VolumeOffIcon } from 'lucide-vue-next';
+import { AlertTriangleIcon, CheckIcon, ChevronDownIcon, CopyIcon, KeyRound, LogOut, ShareIcon, Shield, UserCog, UserRoundXIcon, VolumeOffIcon } from 'lucide-vue-next';
 import ButtonGroup from './ui/button-group/ButtonGroup.vue';
 import Button from './ui/button/Button.vue';
 import DropdownMenu from './ui/dropdown-menu/DropdownMenu.vue';
@@ -28,6 +28,10 @@ function handleGoHome() {
 
 function handleChangePassword() {
   router.push({ name: 'password-change' });
+}
+
+function handleGoToAdmin() {
+  router.push({ name: 'admin-home' });
 }
 </script>
 
@@ -65,6 +69,10 @@ function handleChangePassword() {
               <DropdownMenuItem @click="handleChangePassword">
                 <KeyRound />
                 Change Password
+              </DropdownMenuItem>
+              <DropdownMenuItem v-if="authStore.canAccessAdmin" @click="handleGoToAdmin">
+                <Shield />
+                Administration
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -1,15 +1,23 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { _authLogin, _authRegister, _authLogout, _authMe, _authChangePassword } from '@/lib/auth-wrapper';
+import type { Role } from '@/lib/auth-wrapper';
 
 export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
-  const sessionData = ref<{ username: string; userId: number; uuid: string; roleId: number; roleName: string } | null>(null);
+  const sessionData = ref<{ username: string; userId: number; uuid: string; role: Role } | null>(null);
   const loginLastError = ref<string | null>(null);
   const registerLastError = ref<string | null>(null);
   const changePasswordLastError = ref<string | null>(null);
 
   const isAuthenticated = computed(() => sessionData.value !== null);
+  const isAdmin = computed(() => sessionData.value?.role?.permissions?.includes('is_admin') || false);
+  const canAccessAdmin = computed(() => {
+    if (isAdmin.value) return true;
+    const permissions = sessionData.value?.role?.permissions || [];
+    const adminPermissions = ['can_list_users', 'can_manage_roles', 'can_create_site', 'can_update_site', 'can_delete_site'];
+    return adminPermissions.some(permission => permissions.includes(permission));
+  });
 
   // Initialize session check immediately after me() is defined
   const sessionInfoPromise = ref<Promise<void>>();
@@ -81,8 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
             username: user.username,
             userId: user.userId,
             uuid: user.uuid,
-            roleId: user.roleId,
-            roleName: user.roleName
+            role: user.role
           };
         } else {
           sessionData.value = null;
@@ -123,6 +130,8 @@ export const useAuthStore = defineStore('auth', () => {
     registerLastError,
     changePasswordLastError,
     isAuthenticated,
+    isAdmin,
+    canAccessAdmin,
     sessionInfoPromise,
     ensureSession,
     login,
