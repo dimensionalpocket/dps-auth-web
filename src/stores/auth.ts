@@ -1,20 +1,20 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { _authLogin, _authRegister, _authLogout, _authMe, _authChangePassword } from '@/lib/auth-wrapper';
-import type { Role } from '@/lib/auth-wrapper';
+import type { Role, AuthMeResponse } from '@/lib/auth-wrapper';
 
 export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
-  const sessionData = ref<{ username: string; userId: number; uuid: string; role: Role } | null>(null);
+  const sessionData = ref<AuthMeResponse | null>(null);
   const loginLastError = ref<string | null>(null);
   const registerLastError = ref<string | null>(null);
   const changePasswordLastError = ref<string | null>(null);
 
   const isAuthenticated = computed(() => sessionData.value !== null);
-  const isAdmin = computed(() => sessionData.value?.role?.permissions?.includes('is_admin') || false);
+  const isAdmin = computed(() => sessionData.value?.user?.role?.permissions?.includes('is_admin') || false);
   const canAccessAdmin = computed(() => {
     if (isAdmin.value) return true;
-    const permissions = sessionData.value?.role?.permissions || [];
+    const permissions = sessionData.value?.user?.role?.permissions || [];
     const adminPermissions = ['can_list_users', 'can_manage_roles', 'can_create_site', 'can_update_site', 'can_delete_site'];
     return adminPermissions.some(permission => permissions.includes(permission));
   });
@@ -82,15 +82,10 @@ export const useAuthStore = defineStore('auth', () => {
   function me (): Promise<void> {
     console.log('Fetching current user session data...');
     sessionInfoPromise.value = _authMe()
-      .then(user => {
-        if (user) {
-          console.log('AuthMe user data:', user);
-          sessionData.value = {
-            username: user.username,
-            userId: user.userId,
-            uuid: user.uuid,
-            role: user.role
-          };
+      .then(authMe => {
+        if (authMe) {
+          console.log('AuthMe user data:', authMe);
+          sessionData.value = authMe;
         } else {
           sessionData.value = null;
         }
@@ -99,7 +94,7 @@ export const useAuthStore = defineStore('auth', () => {
         sessionData.value = null;
         throw error;
       });
-    
+
     return sessionInfoPromise.value;
   }
 

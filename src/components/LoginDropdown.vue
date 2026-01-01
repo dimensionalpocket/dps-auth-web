@@ -56,7 +56,7 @@ function handleGoToAdmin() {
       <ButtonGroup v-else>
         <Button variant="outline" @click="handleGoHome">
           <UserCog/>
-          <span class="hidden sm:inline">{{ authStore.sessionData?.username }}</span>
+          <span class="hidden sm:inline">{{ authStore.sessionData?.user?.name }}</span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>

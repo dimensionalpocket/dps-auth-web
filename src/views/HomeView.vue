@@ -28,7 +28,7 @@ async function handleLogout() {
   <div class="w-full max-w-md">
     <Card>
       <CardHeader>
-        <CardTitle>Welcome back, {{ authStore.sessionData?.username }}</CardTitle>
+        <CardTitle>Welcome back, {{ authStore.sessionData?.user?.name }}</CardTitle>
       </CardHeader>
       <CardContent>
         <div class="flex flex-col sm:flex-row gap-2">

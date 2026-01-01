@@ -10,6 +10,7 @@ import AdminApp from '@/views/admin/AdminApp.vue'
 import AdminHomeView from '@/views/admin/AdminHomeView.vue'
 import AdminSitesView from '@/views/admin/AdminSitesView.vue'
 import AdminSitesNewView from '@/views/admin/AdminSitesNewView.vue'
+import AdminSitesEditView from '@/views/admin/AdminSitesEditView.vue'
 import AdminUsersView from '@/views/admin/AdminUsersView.vue'
 
 const routes = [
@@ -57,6 +58,11 @@ const routes = [
         path: 'sites/new',
         name: 'admin-sites-new',
         component: AdminSitesNewView,
+      },
+      {
+        path: 'sites/:id/edit',
+        name: 'admin-sites-edit',
+        component: AdminSitesEditView,
       },
     ]
   },

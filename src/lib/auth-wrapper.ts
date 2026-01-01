@@ -35,14 +35,20 @@ const GET_SERVER_TIMESTAMP = `
 const AUTH_ME = `
   query AuthMe {
     authMe {
-      userId
-      uuid
-      username
-      role {
+      user {
         id
+        uuid
         name
-        permissions
+        role {
+          id
+          name
+          permissions
+        }
+        createdTs
+        updatedTs
       }
+      sessionIat
+      sessionExp
     }
   }
 `
@@ -63,14 +69,16 @@ const AUTH_REGISTER = `
   mutation AuthRegister($username: String!, $password: String!, $passwordConfirmation: String!) {
     authRegister(username: $username, password: $password, passwordConfirmation: $passwordConfirmation) {
       user {
-        userId
+        id
         uuid
-        username
+        name
         role {
           id
           name
           permissions
         }
+        createdTs
+        updatedTs
       }
       message
     }
@@ -82,8 +90,8 @@ const AUTH_LOGIN = `
     authLogin(username: $username, password: $password) {
       token
       user {
-        userId
-        username
+        id
+        name
         role {
           id
           name
@@ -156,6 +164,49 @@ const REMOVE_SITE = `
   }
 `
 
+const USERS = `
+  query Users {
+    users {
+      id
+      uuid
+      name
+      role {
+        id
+        name
+        permissions
+      }
+      createdTs
+      updatedTs
+    }
+  }
+`
+
+const DELETE_USER = `
+  mutation DeleteUser($id: Int!) {
+    deleteUser(id: $id) {
+      success
+    }
+  }
+`
+
+const UPDATE_USER = `
+  mutation UpdateUser($id: Int!, $username: String, $roleId: Int, $password: String, $passwordConfirmation: String, $metadataJson: String) {
+    updateUser(id: $id, username: $username, roleId: $roleId, password: $password, passwordConfirmation: $passwordConfirmation, metadataJson: $metadataJson) {
+      id
+      uuid
+      name
+      role {
+        id
+        name
+        permissions
+      }
+      metadataJson
+      createdTs
+      updatedTs
+    }
+  }
+`
+
 const ROLE_PERMISSIONS = `
   query RolePermissions {
     rolePermissions
@@ -167,6 +218,7 @@ const ROLES = `
     roles {
       id
       name
+      isDefault
       permissions
       createdTs
       updatedTs
@@ -179,6 +231,7 @@ const ROLE = `
     role(id: $id) {
       id
       name
+      isDefault
       permissions
       createdTs
       updatedTs
@@ -191,6 +244,7 @@ const ADD_ROLE = `
     addRole(name: $name, permissions: $permissions) {
       id
       name
+      isDefault
       permissions
       createdTs
       updatedTs
@@ -203,6 +257,7 @@ const UPDATE_ROLE = `
     updateRole(id: $id, name: $name, permissions: $permissions) {
       id
       name
+      isDefault
       permissions
       createdTs
       updatedTs
@@ -227,6 +282,8 @@ const REMOVE_ROLE = `
   mutation RemoveRole($id: Int!) {
     removeRole(id: $id) {
       success
+      id
+      name
     }
   }
 `
@@ -238,19 +295,36 @@ export interface Role {
   permissions: string[]
 }
 
-export interface AuthMeResponse {
-  userId: number
+export interface User {
+  id: number
   uuid: string
-  username: string
+  name: string
   role: Role
+  createdTs: number
+  updatedTs: number
+}
+
+export interface AuthMeResponse {
+  user: {
+    id: number
+    uuid: string
+    name: string
+    role: Role
+    createdTs: number
+    updatedTs: number
+  }
+  sessionIat: number
+  sessionExp: number
 }
 
 export interface AuthRegisterResponse {
   user: {
-    userId: number
+    id: number
     uuid: string
-    username: string
+    name: string
     role: Role
+    createdTs: number
+    updatedTs: number
   }
   message: string
 }
@@ -258,8 +332,8 @@ export interface AuthRegisterResponse {
 export interface AuthLoginResponse {
   token: string
   user: {
-    userId: number
-    username: string
+    id: number
+    name: string
     role: Role
   }
   message: string
@@ -279,6 +353,7 @@ export interface Site {
 export interface RoleWithTimestamps {
   id: number
   name: string
+  isDefault: boolean
   permissions: string[]
   createdTs: number
   updatedTs: number
@@ -355,6 +430,24 @@ export async function _removeSite(siteId: number): Promise<Site> {
   return result.data.removeSite
 }
 
+export async function _users(): Promise<User[]> {
+  const result = await client.query(USERS, {}).toPromise()
+  if (result.error) throw result.error
+  return result.data.users
+}
+
+export async function _deleteUser(id: number): Promise<{ success: boolean }> {
+  const result = await client.mutation(DELETE_USER, { id }).toPromise()
+  if (result.error) throw result.error
+  return result.data.deleteUser
+}
+
+export async function _updateUser(id: number, username?: string, roleId?: number, password?: string, passwordConfirmation?: string, metadataJson?: string): Promise<{ id: number; uuid: string; name: string; role: Role; metadataJson?: string; createdTs: number; updatedTs: number }> {
+  const result = await client.mutation(UPDATE_USER, { id, username, roleId, password, passwordConfirmation, metadataJson }).toPromise()
+  if (result.error) throw result.error
+  return result.data.updateUser
+}
+
 export async function _rolePermissions(): Promise<string[]> {
   const result = await client.query(ROLE_PERMISSIONS, {}).toPromise()
   if (result.error) throw result.error
@@ -391,7 +484,7 @@ export async function _setDefaultRole(roleId: number): Promise<RoleWithDefault> 
   return result.data.setDefaultRole
 }
 
-export async function _removeRole(id: number): Promise<{ success: boolean }> {
+export async function _removeRole(id: number): Promise<{ success: boolean; id: number; name: string }> {
   const result = await client.mutation(REMOVE_ROLE, { id }).toPromise()
   if (result.error) throw result.error
   return result.data.removeRole
